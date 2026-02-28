@@ -1,77 +1,46 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cluck Bites</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial;
   background: #ffd9a8;
   text-align: center;
-  color: #333;
-}
-
-header {
-  background: #b22222;
-  color: white;
-  padding: 30px;
 }
 
 .card {
   background: #f2c894;
-  padding: 25px;
-  margin: 40px auto;
+  padding: 20px;
   width: 90%;
   max-width: 400px;
-  border-radius: 16px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  margin: 50px auto;
+  border-radius: 12px;
 }
 
 select, input {
-  padding: 10px;
-  margin: 8px 0;
   width: 90%;
-  border-radius: 8px;
-  border: none;
+  padding: 8px;
+  margin: 6px 0;
 }
 
 button {
-  background: white;
-  color: #8b3a00;
-  border: none;
-  padding: 12px;
   width: 90%;
-  border-radius: 8px;
-  font-weight: bold;
+  padding: 10px;
   cursor: pointer;
-}
-
-button:hover {
-  background: #ffe4c4;
-}
-
-#total {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 10px;
 }
 </style>
 </head>
+
 <body>
 
-<header>
-<h1>Cluck Bites</h1>
-<p>Crispy. Juicy. Unforgettable.</p>
-</header>
+<h2>Cluck Bites</h2>
 
 <div class="card">
 
-<h2>Place Order</h2>
-
-<input type="text" id="customer" placeholder="Enter Your Name">
+<input type="text" id="name" placeholder="Enter Name">
 
 <select id="chicken">
 <option value="69">3 Pieces - 69</option>
@@ -81,59 +50,47 @@ button:hover {
 
 <select id="sauce">
 <option value="0">No Sauce</option>
-<option value="5">Sinigang Zing (+5)</option>
-<option value="2">Kare-Kare Cream (+2)</option>
-<option value="2">Adobo Glaze (+2)</option>
+<option value="5">Sinigang (+5)</option>
+<option value="2">Kare Kare (+2)</option>
 </select>
 
 <select id="drink">
 <option value="0">No Drink</option>
-<option value="16">Lychee Drink (+16)</option>
+<option value="16">Drink (+16)</option>
 </select>
 
-<div id="total">Total: 0</div>
+<h3 id="total">Total: 0</h3>
 
-<button onclick="submitOrder()">Place Order</button>
+<button onclick="calculate()">Calculate</button>
+
+<button onclick="submitOrder()">Submit Order</button>
 
 </div>
 
 <script>
 
-const chicken = document.getElementById("chicken");
-const sauce = document.getElementById("sauce");
-const drink = document.getElementById("drink");
-const totalDisplay = document.getElementById("total");
+function calculate() {
 
-function updateTotal() {
+let chicken = parseInt(document.getElementById("chicken").value);
+let sauce = parseInt(document.getElementById("sauce").value);
+let drink = parseInt(document.getElementById("drink").value);
 
-let total =
-parseInt(chicken.value) +
-parseInt(sauce.value) +
-parseInt(drink.value);
+let total = chicken + sauce + drink;
 
-totalDisplay.innerText = "Total: " + total;
+document.getElementById("total").innerText = "Total: " + total;
 
 }
-
-chicken.addEventListener("change", updateTotal);
-sauce.addEventListener("change", updateTotal);
-drink.addEventListener("change", updateTotal);
-
-updateTotal();
 
 function submitOrder() {
 
-let name = document.getElementById("customer").value;
+let name = document.getElementById("name").value;
 
-if (name === "") {
-alert("Enter name first");
+if(name === "") {
+alert("Enter name");
 return;
 }
 
-alert("Order Submitted Successfully");
-
-document.getElementById("customer").value = "";
-
+alert("Order Submitted");
 }
 
 </script>
