@@ -149,66 +149,74 @@ const supabaseUrl = "https://grtttmvcwswbfqbmfwlt.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdydHR0bXZjd3N3YmZxYm1md2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNjYyMjUsImV4cCI6MjA4Nzg0MjIyNX0.Rq0iWluWgd7IsTjU6Sg7F-SpDvXPysd9BkVPvAhn7fI";
 
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-/* ===== AUTO CALCULATE ===== */
+/* ========================= */
+/* WAIT FOR PAGE TO LOAD     */
+/* ========================= */
 
-function updateTotal() {
+document.addEventListener("DOMContentLoaded", function () {
 
-let chicken = parseInt(document.getElementById("chicken").value);
-let sauce = parseInt(document.getElementById("sauce").value);
-let drink = parseInt(document.getElementById("drink").value);
+    const chicken = document.getElementById("chicken");
+    const sauce = document.getElementById("sauce");
+    const drink = document.getElementById("drink");
 
-let total = chicken + sauce + drink;
+    /* ===== AUTO TOTAL UPDATE ===== */
 
-document.getElementById("total").innerText = "Total: ₱" + total;
+    function updateTotal() {
 
-return total;
-}
+        let total =
+            parseInt(chicken.value) +
+            parseInt(sauce.value) +
+            parseInt(drink.value);
 
-/* ===== ATTACH AUTO UPDATE TO DROPDOWNS ===== */
+        document.getElementById("total").innerText =
+            "Total: ₱" + total;
+    }
 
-document.getElementById("chicken").addEventListener("change", updateTotal);
-document.getElementById("sauce").addEventListener("change", updateTotal);
-document.getElementById("drink").addEventListener("change", updateTotal);
+    /* Attach listeners */
+    chicken.addEventListener("change", updateTotal);
+    sauce.addEventListener("change", updateTotal);
+    drink.addEventListener("change", updateTotal);
 
-/* ===== PLACE ORDER ===== */
+    updateTotal(); // Run once on load
 
-async function placeOrder() {
+    /* ===== PLACE ORDER ===== */
 
-let name = document.getElementById("customer").value;
+    window.placeOrder = async function () {
 
-if(name === ""){
-alert("Please enter your name.");
-return;
-}
+        console.log("Button clicked");
 
-let total = updateTotal();
+        let name = document.getElementById("customer").value;
 
-let chickenText = document.getElementById("chicken").options[document.getElementById("chicken").selectedIndex].text;
-let sauceText = document.getElementById("sauce").options[document.getElementById("sauce").selectedIndex].text;
-let drinkText = document.getElementById("drink").options[document.getElementById("drink").selectedIndex].text;
+        if (name === "") {
+            alert("Please enter your name.");
+            return;
+        }
 
-const { error } = await supabase
-.from("orders")
-.insert([{
-customer_name: name,
-chicken_size: chickenText,
-sauce: sauceText,
-drink: drinkText,
-total_price: total,
-status: "active"
-}]);
+        let total =
+            parseInt(chicken.value) +
+            parseInt(sauce.value) +
+            parseInt(drink.value);
 
-if(error){
-alert("Error saving order");
-console.error(error);
-} else {
-alert("Order placed successfully!");
-}
+        let { error } = await supabase
+            .from("orders")
+            .insert([{
+                customer_name: name,
+                chicken_size: chicken.options[chicken.selectedIndex].text,
+                sauce: sauce.options[sauce.selectedIndex].text,
+                drink: drink.options[drink.selectedIndex].text,
+                total_price: total,
+                status: "active"
+            }]);
 
-}
+        if (error) {
+            alert("Database error.");
+            console.error(error);
+        } else {
+            alert("Order placed successfully!");
+        }
+    };
 
-/* Run once on page load */
-updateTotal();
+});
 
 </script>
 
