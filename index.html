@@ -104,7 +104,24 @@ button:hover {
 </div>
   
 <script>
-document.body.innerHTML += "<h2>SCRIPT IS RUNNING</h2>";
+
+  let supabase = null;
+
+function initSupabase() {
+
+if (typeof window.supabase === "undefined") {
+alert("Supabase library not loaded");
+return;
+}
+
+const supabaseUrl = "https://YOUR_PROJECT_ID.supabase.co";
+const supabaseKey = "YOUR_ANON_KEY";
+
+supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+}
+
+initSupabase();
 </script>
 
 
