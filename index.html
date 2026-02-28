@@ -104,24 +104,63 @@ button:hover {
 </div>
   
 <script>
+window.addEventListener("load", function () {
 
-  let supabase = null;
+const supabaseUrl = "https://grtttmvcwswbfqbmfwlt.supabase.co";
+const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdydHR0bXZjd3N3YmZxYm1md2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNjYyMjUsImV4cCI6MjA4Nzg0MjIyNX0.Rq0iWluWgd7IsTjU6Sg7F-SpDvXPysd9BkVPvAhn7fI";
 
-function initSupabase() {
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-if (typeof window.supabase === "undefined") {
-alert("Supabase library not loaded");
+console.log("Supabase initialized");
+
+window.saveToDatabase = async function(name, total, chickenText, sauceText, drinkText) {
+
+if(!supabase) return;
+
+const { error } = await supabase
+.from("orders")
+.insert([{
+customer_name: name,
+chicken_size: chickenText,
+sauce: sauceText,
+drink: drinkText,
+total_price: total,
+status: "active"
+}]);
+
+if(error){
+alert("Database error");
+console.log(error);
+} else {
+alert("Order saved to database");
+}
+
+}
+
+});
+
+function submitOrder() {
+
+let name = document.getElementById("customer").value;
+
+if(name === ""){
+alert("Enter name");
 return;
 }
 
-const supabaseUrl = "https://YOUR_PROJECT_ID.supabase.co";
-const supabaseKey = "YOUR_ANON_KEY";
+let total =
+parseInt(chicken.value) +
+parseInt(sauce.value) +
+parseInt(drink.value);
 
-supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+let chickenText = chicken.options[chicken.selectedIndex].text;
+let sauceText = sauce.options[sauce.selectedIndex].text;
+let drinkText = drink.options[drink.selectedIndex].text;
+
+window.saveToDatabase(name, total, chickenText, sauceText, drinkText);
 
 }
-
-initSupabase();
+  
 </script>
 
 
