@@ -149,10 +149,9 @@ const supabaseUrl = "https://grtttmvcwswbfqbmfwlt.supabase.co";
 const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdydHR0bXZjd3N3YmZxYm1md2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNjYyMjUsImV4cCI6MjA4Nzg0MjIyNX0.Rq0iWluWgd7IsTjU6Sg7F-SpDvXPysd9BkVPvAhn7fI";
 
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+/* ===== AUTO CALCULATE ===== */
 
-/* ===== CALCULATE TOTAL ===== */
-
-function calculateTotal() {
+function updateTotal() {
 
 let chicken = parseInt(document.getElementById("chicken").value);
 let sauce = parseInt(document.getElementById("sauce").value);
@@ -165,41 +164,51 @@ document.getElementById("total").innerText = "Total: ₱" + total;
 return total;
 }
 
+/* ===== ATTACH AUTO UPDATE TO DROPDOWNS ===== */
+
+document.getElementById("chicken").addEventListener("change", updateTotal);
+document.getElementById("sauce").addEventListener("change", updateTotal);
+document.getElementById("drink").addEventListener("change", updateTotal);
+
 /* ===== PLACE ORDER ===== */
 
 async function placeOrder() {
 
 let name = document.getElementById("customer").value;
+
 if(name === ""){
-alert("Please enter your name");
+alert("Please enter your name.");
 return;
 }
 
-let total = calculateTotal();
+let total = updateTotal();
 
-let chicken = document.getElementById("chicken").options[document.getElementById("chicken").selectedIndex].text;
-let sauce = document.getElementById("sauce").options[document.getElementById("sauce").selectedIndex].text;
-let drink = document.getElementById("drink").options[document.getElementById("drink").selectedIndex].text;
+let chickenText = document.getElementById("chicken").options[document.getElementById("chicken").selectedIndex].text;
+let sauceText = document.getElementById("sauce").options[document.getElementById("sauce").selectedIndex].text;
+let drinkText = document.getElementById("drink").options[document.getElementById("drink").selectedIndex].text;
 
 const { error } = await supabase
 .from("orders")
 .insert([{
 customer_name: name,
-chicken_size: chicken,
-sauce: sauce,
-drink: drink,
+chicken_size: chickenText,
+sauce: sauceText,
+drink: drinkText,
 total_price: total,
 status: "active"
 }]);
 
 if(error){
 alert("Error saving order");
-console.log(error);
+console.error(error);
 } else {
 alert("Order placed successfully!");
 }
 
 }
+
+/* Run once on page load */
+updateTotal();
 
 </script>
 
