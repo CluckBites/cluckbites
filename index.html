@@ -1,46 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Cluck Bites</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cluck Bites</title>
 
 <style>
+
 body {
-  font-family: Arial;
-  background: #fffff;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #ffd9a8;
   text-align: center;
+  color: #333;
 }
 
-.card {
-  background: #fffff;
-  padding: 20px;
+header {
+  background: #b22222;
+  color: white;
+  padding: 25px;
+}
+
+.container {
+  background: #f2c894;
+  padding: 25px;
+  margin: 40px auto;
   width: 90%;
   max-width: 400px;
-  margin: 50px auto;
-  border-radius: 12px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
 }
 
 select, input {
   width: 90%;
-  padding: 8px;
-  margin: 6px 0;
+  padding: 10px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: none;
 }
 
 button {
   width: 90%;
-  padding: 10px;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  background: white;
+  font-weight: bold;
   cursor: pointer;
 }
+
+button:hover {
+  background: #ffe4c4;
+}
+
+#total {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
 </style>
 </head>
-
 <body>
 
-<h2>Cluck Bites</h2>
+<header>
+<h1>Cluck Bites</h1>
+<p>Order Your Food</p>
+</header>
 
-<div class="card">
+<div class="container">
 
-<input type="text" id="name" placeholder="Enter Name">
+<input type="text" id="customer" placeholder="Enter Your Name">
 
 <select id="chicken">
 <option value="69">3 Pieces - 69</option>
@@ -52,45 +83,52 @@ button {
 <option value="0">No Sauce</option>
 <option value="5">Sinigang (+5)</option>
 <option value="2">Kare Kare (+2)</option>
+<option value="2">Adobo (+2)</option>
 </select>
 
 <select id="drink">
 <option value="0">No Drink</option>
-<option value="16">Drink (+16)</option>
+<option value="16">Lychee Drink (+16)</option>
 </select>
 
-<h3 id="total">Total: 0</h3>
+<div id="total">Total: 0</div>
 
 <button onclick="calculate()">Calculate</button>
-
 <button onclick="submitOrder()">Submit Order</button>
 
 </div>
 
 <script>
 
+const chicken = document.getElementById("chicken");
+const sauce = document.getElementById("sauce");
+const drink = document.getElementById("drink");
+const totalDisplay = document.getElementById("total");
+
 function calculate() {
 
-let chicken = parseInt(document.getElementById("chicken").value);
-let sauce = parseInt(document.getElementById("sauce").value);
-let drink = parseInt(document.getElementById("drink").value);
+let total =
+parseInt(chicken.value) +
+parseInt(sauce.value) +
+parseInt(drink.value);
 
-let total = chicken + sauce + drink;
-
-document.getElementById("total").innerText = "Total: " + total;
+totalDisplay.innerText = "Total: " + total;
 
 }
 
 function submitOrder() {
 
-let name = document.getElementById("name").value;
+let name = document.getElementById("customer").value;
 
 if(name === "") {
-alert("Enter name");
+alert("Please enter your name.");
 return;
 }
 
-alert("Order Submitted");
+alert("Order Submitted Successfully");
+
+document.getElementById("customer").value = "";
+
 }
 
 </script>
