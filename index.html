@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cluck Bites</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fff3e6;
+  text-align: center;
+}
+
+/* Header */
+header {
+  background: #ff9aa2; /* pastel light red */
+  color: #4a2c2a;
+  padding: 40px;
+}
+
+/* Sections */
+section {
+  padding: 30px;
+}
+
+/* Card */
+.card {
+  background: #fffbe6; /* light pastel yellow */
+  padding: 25px;
+  margin: 20px auto;
+  max-width: 380px;
+  border-radius: 16px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+/* Inputs */
+select {
+  padding: 10px;
+  margin-top: 10px;
+  width: 85%;
+  border-radius: 8px;
+  border: 1px solid #ffb347;
+}
+
+/* Button */
+button {
+  background: #ff7f50; /* soft orange */
+  color: white;
+  border: none;
+  padding: 12px;
+  width: 85%;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #ff6a33;
+}
+
+#total {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 15px;
+  color: #4a2c2a;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Cluck Bites 🍗</h1>
+<p>Crispy. Juicy. Unforgettable.</p>
+</header>
+
+<section>
+<div class="card">
+<h2>Order Calculator</h2>
+
+<label>Chicken Size:</label>
+<select id="chicken">
+<option value="69">3 Pieces - ₱69</option>
+<option value="125">5 Pieces - ₱125</option>
+<option value="170">7 Pieces - ₱170</option>
+</select>
+
+<br><br>
+
+<label>Bottom Add-On (₱5):</label>
+<select id="bottom">
+<option value="0">No</option>
+<option value="5">Yes (+₱5)</option>
+</select>
+
+<br><br>
+
+<label>Sauce:</label>
+<select id="sauce">
+<option value="0">None</option>
+<option value="5">Sinigang Zing (+₱5)</option>
+<option value="2">Kare-Kare Cream (+₱2)</option>
+<option value="2">Adobo Glaze (+₱2)</option>
+</select>
+
+<br><br>
+
+<button onclick="calculateTotal()">Calculate Total</button>
+
+<div id="total">Total: ₱0</div>
+
+</div>
+</section>
+
+<script>
+function calculateTotal() {
+  let chicken = parseInt(document.getElementById("chicken").value);
+  let bottom = parseInt(document.getElementById("bottom").value);
+  let sauce = parseInt(document.getElementById("sauce").value);
+
+  let total = chicken + bottom + sauce;
+
+  document.getElementById("total").innerText = "Total: ₱" + total;
+}
+</script>
+
+</body>
+</html>
