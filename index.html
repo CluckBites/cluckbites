@@ -102,67 +102,11 @@ button:hover {
 <button onclick="submitOrder()">Submit Order</button>
 
 </div>
-
+  
 <script>
-
-alert("SCRIPT LOADED");
-  
-const supabaseUrl = "https://grtttmvcwswbfqbmfwlt.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdydHR0bXZjd3N3YmZxYm1md2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNjYyMjUsImV4cCI6MjA4Nzg0MjIyNX0.Rq0iWluWgd7IsTjU6Sg7F-SpDvXPysd9BkVPvAhn7fI";
-
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-  
-const chicken = document.getElementById("chicken");
-const sauce = document.getElementById("sauce");
-const drink = document.getElementById("drink");
-const totalDisplay = document.getElementById("total");
-
-function calculate() {
-
-let total =
-parseInt(chicken.value) +
-parseInt(sauce.value) +
-parseInt(drink.value);
-
-totalDisplay.innerText = "Total: " + total;
-
-}
-
-async function submitOrder() {
-
-let name = document.getElementById("customer").value;
-
-if(name === "") {
-alert("Please enter your name.");
-return;
-}
-
-let total =
-parseInt(chicken.value) +
-parseInt(sauce.value) +
-parseInt(drink.value);
-
-const { error } = await supabase
-.from("orders")
-.insert([{
-customer_name: name,
-chicken_size: chicken.options[chicken.selectedIndex].text,
-sauce: sauce.options[sauce.selectedIndex].text,
-drink: drink.options[drink.selectedIndex].text,
-total_price: total,
-status: "active"
-}]);
-
-if(error){
-alert("Database error");
-console.log(error);
-} else {
-alert("Order saved to database!");
-}
-
-}
-
+document.body.innerHTML += "<h2>SCRIPT IS RUNNING</h2>";
 </script>
+
 
 </body>
 </html>
