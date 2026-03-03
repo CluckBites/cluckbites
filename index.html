@@ -204,6 +204,10 @@ function createOrder(){
     return;
   }
 
+  // Get current date/time
+  const now = new Date();
+  const dateTime = now.toLocaleString();
+
   const order = {
     id: orderId++,
     name,
@@ -215,7 +219,8 @@ function createOrder(){
     extra,
     drink,
     total,
-    status:"Ongoing"
+    status:"Ongoing",
+    dateTime
   };
 
   orders.push(order);
@@ -254,6 +259,7 @@ function renderOrders(){
         Order #${order.id} - ${order.name} - ₱${order.total}
       </div>
       <div class="details" id="details-${order.id}">
+        Date/Time: ${order.dateTime}<br>
         Grade: ${order.grade}<br>
         Section: ${order.section}<br>
         Room: ${order.room}<br>
