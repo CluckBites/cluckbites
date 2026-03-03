@@ -148,9 +148,9 @@ button:hover {
     <div class="section-title">🟢 Done Orders</div>
     <div id="doneOrders"></div>
 
-    <div class="grand-total" id="grandTotal">
-      Grand Total: ₱0
-    </div>
+    <div class="grand-total" id="ongoingTotal">Ongoing Total: ₱0</div>
+    <div class="grand-total" id="doneTotal">Done Total: ₱0</div>
+    <div class="grand-total" id="grandTotal">Grand Total: ₱0</div>
 
   </div>
 </div>
@@ -221,6 +221,15 @@ function createOrder(){
   orders.push(order);
   saveOrders();
   renderOrders();
+
+  document.getElementById("customerName").value="";
+  document.getElementById("gradeLevel").value="";
+  document.getElementById("section").value="";
+  document.getElementById("roomNumber").value="";
+  document.getElementById("chickenSelect").selectedIndex=0;
+  document.getElementById("sauceSelect").selectedIndex=0;
+  document.getElementById("extraDipSelect").selectedIndex=0;
+  document.getElementById("drinkSelect").selectedIndex=0;
 }
 
 function renderOrders(){
@@ -228,10 +237,13 @@ function renderOrders(){
   const doneDiv = document.getElementById("doneOrders");
   ongoingDiv.innerHTML="";
   doneDiv.innerHTML="";
-  let grandTotal = 0;
+
+  let ongoingTotal = 0;
+  let doneTotal = 0;
 
   orders.forEach(order=>{
-    if(order.status==="Ongoing") grandTotal+=order.total;
+    if(order.status==="Ongoing") ongoingTotal += order.total;
+    if(order.status==="Done") doneTotal += order.total;
 
     const div=document.createElement("div");
     div.className="order";
@@ -259,7 +271,9 @@ function renderOrders(){
     else doneDiv.appendChild(div);
   });
 
-  document.getElementById("grandTotal").textContent="Grand Total: ₱"+grandTotal;
+  document.getElementById("ongoingTotal").textContent = "Ongoing Total: ₱"+ongoingTotal;
+  document.getElementById("doneTotal").textContent = "Done Total: ₱"+doneTotal;
+  document.getElementById("grandTotal").textContent = "Grand Total: ₱"+(ongoingTotal + doneTotal);
 }
 
 function toggleDetails(id){
