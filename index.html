@@ -8,7 +8,7 @@
 <style>
 body {
   font-family: 'Segoe UI', sans-serif;
-  background:#FFF9C4; /* pastel yellow */
+  background:#FFF9C4;
   color:white;
   display:flex;
   justify-content:center;
@@ -19,17 +19,16 @@ body {
 }
 
 .container {
-  background:#FFCDD2;
-  padding:0;
+  background:#E57373;
   border-radius:15px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
   max-width:450px;
   width:100%;
   overflow:hidden;
 }
 
 .header {
-  background:#F8BBD0; /* pastel red */
+  background:#D32F2F;
   padding:20px;
   text-align:center;
 }
@@ -53,7 +52,7 @@ h1 {
   margin-bottom:5px;
 }
 
-select, input[type="number"], input[type="text"] {
+select, input[type="text"] {
   width:100%;
   padding:8px;
   margin-bottom:10px;
@@ -62,7 +61,7 @@ select, input[type="number"], input[type="text"] {
 }
 
 button {
-  background:#CE93D8; /* pastel purple */
+  background:#FFB74D;
   color:white;
   border:none;
   padding:8px 12px;
@@ -71,18 +70,18 @@ button {
 }
 
 button:hover {
-  background:#BA68C8;
+  background:#FFA726;
 }
 
 .order {
   margin-top:15px;
-  background:#F48FB1;
+  background:#EF5350;
   padding:10px;
   border-radius:10px;
 }
 
 .done-order {
-  opacity:0.7;
+  opacity:0.6;
 }
 
 .summary {
@@ -165,22 +164,47 @@ button:hover {
 </div>
 
 <script>
-let orders=[];
-let orderId=1;
+let orders = [];
+let orderId = 1;
 
+/* ===============================
+   LOAD SAVED DATA ON PAGE START
+================================= */
+const savedOrders = localStorage.getItem("cluckBitesOrders");
+const savedId = localStorage.getItem("cluckBitesOrderId");
+
+if (savedOrders) {
+  orders = JSON.parse(savedOrders);
+}
+
+if (savedId) {
+  orderId = parseInt(savedId);
+}
+
+/* ===============================
+   SAVE FUNCTION
+================================= */
+function saveOrders() {
+  localStorage.setItem("cluckBitesOrders", JSON.stringify(orders));
+  localStorage.setItem("cluckBitesOrderId", orderId);
+}
+
+/* ===============================
+   CREATE ORDER
+================================= */
 function createOrder(){
-  const name=document.getElementById("customerName").value.trim();
-  const chicken=document.getElementById("chickenSelect").value;
-  const sauce=document.getElementById("sauceSelect").value;
-  const extra=document.getElementById("extraDipSelect").value;
-  const drink=document.getElementById("drinkSelect").value;
+  const name = document.getElementById("customerName").value.trim();
+  const chicken = document.getElementById("chickenSelect").value;
+  const sauce = document.getElementById("sauceSelect").value;
+  const extra = document.getElementById("extraDipSelect").value;
+  const drink = document.getElementById("drinkSelect").value;
 
   if(!name || !chicken){
     alert("Enter name and select chicken!");
     return;
   }
 
-  let total=0;
+  let total = 0;
 
   if(chicken==="3pcs") total+=75;
   if(chicken==="5pcs") total+=125;
@@ -192,8 +216,8 @@ function createOrder(){
 
   if(drink==="Iced Tea") total+=20;
 
-  const order={
-    id:orderId++,
+  const order = {
+    id: orderId++,
     name,
     chicken,
     sauce,
@@ -204,9 +228,16 @@ function createOrder(){
   };
 
   orders.push(order);
+  saveOrders();
   renderOrders();
+
+  document.getElementById("customerName").value="";
+  document.getElementById("chickenSelect").selectedIndex=0;
 }
 
+/* ===============================
+   RENDER ORDERS
+================================= */
 function renderOrders(){
   const container=document.getElementById("orders");
   container.innerHTML="";
@@ -233,13 +264,15 @@ function renderOrders(){
         <button onclick="deleteOrder(${order.id})">Delete</button>
       </div>
     `;
-
     container.appendChild(div);
   });
 
   document.getElementById("grandTotal").textContent="Grand Total: ₱"+grandTotal;
 }
 
+/* ===============================
+   OTHER FUNCTIONS
+================================= */
 function toggleDetails(id){
   const d=document.getElementById("details-"+id);
   d.style.display=(d.style.display==="block"?"none":"block");
@@ -247,13 +280,21 @@ function toggleDetails(id){
 
 function deleteOrder(id){
   orders=orders.filter(o=>o.id!==id);
+  saveOrders();
   renderOrders();
 }
 
 function markDone(id){
   const o=orders.find(o=>o.id===id);
-  if(o){ o.status="Done"; renderOrders();}
+  if(o){
+    o.status="Done";
+    saveOrders();
+    renderOrders();
+  }
 }
+
+/* INITIAL RENDER */
+renderOrders();
 </script>
 
 </body>
