@@ -1,168 +1,260 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cluck Bites</title>
+<title>Cluck Bites Order Tracker</title>
 
 <style>
-
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #ffd9a8;
-  text-align: center;
-  color: #333;
-}
-
-header {
-  background: #b22222;
-  color: white;
-  padding: 25px;
+  font-family: 'Segoe UI', sans-serif;
+  background:#FFF9C4; /* pastel yellow */
+  color:white;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  min-height:100vh;
+  margin:0;
+  padding:20px;
 }
 
 .container {
-  background: #f2c894;
-  padding: 25px;
-  margin: 40px auto;
-  width: 90%;
-  max-width: 400px;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  background:#FFCDD2;
+  padding:0;
+  border-radius:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  max-width:450px;
+  width:100%;
+  overflow:hidden;
 }
 
-select, input {
-  width: 90%;
-  padding: 10px;
-  margin: 8px 0;
-  border-radius: 6px;
-  border: none;
+.header {
+  background:#F8BBD0; /* pastel red */
+  padding:20px;
+  text-align:center;
+}
+
+h1 {
+  margin:0;
+}
+
+.content {
+  padding:20px;
+}
+
+.select-group {
+  margin:12px 0;
+  text-align:left;
+}
+
+.select-group label {
+  font-weight:bold;
+  display:block;
+  margin-bottom:5px;
+}
+
+select, input[type="number"], input[type="text"] {
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:8px;
+  border:none;
 }
 
 button {
-  width: 90%;
-  padding: 12px;
-  margin-top: 10px;
-  border: none;
-  border-radius: 6px;
-  background: white;
-  font-weight: bold;
-  cursor: pointer;
+  background:#CE93D8; /* pastel purple */
+  color:white;
+  border:none;
+  padding:8px 12px;
+  border-radius:10px;
+  cursor:pointer;
 }
 
 button:hover {
-  background: #ffe4c4;
+  background:#BA68C8;
 }
 
-#total {
-  font-size: 20px;
-  font-weight: bold;
-  margin-top: 10px;
+.order {
+  margin-top:15px;
+  background:#F48FB1;
+  padding:10px;
+  border-radius:10px;
 }
 
+.done-order {
+  opacity:0.7;
+}
+
+.summary {
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.details {
+  display:none;
+  font-size:14px;
+  margin-top:5px;
+}
+
+.grand-total {
+  margin-top:20px;
+  font-weight:bold;
+}
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-  
-</script>
-  
 </head>
+
 <body>
 
-<header>
-<h1>Cluck Bites</h1>
-<p>Order Your Food</p>
-</header>
-
 <div class="container">
+  <div class="header">
+    <h1>Cluck Bites</h1>
+  </div>
 
-<input type="text" id="customer" placeholder="Enter Your Name">
+  <div class="content">
 
-<select id="chicken">
-<option value="69">3 Pieces - 69</option>
-<option value="125">5 Pieces - 125</option>
-<option value="170">7 Pieces - 170</option>
-</select>
+    <input type="text" id="customerName" placeholder="Customer Name">
 
-<select id="sauce">
-<option value="0">No Sauce</option>
-<option value="5">Sinigang (+5)</option>
-<option value="2">Kare Kare (+2)</option>
-<option value="2">Adobo (+2)</option>
-</select>
+    <div class="select-group">
+      <label>Chicken</label>
+      <select id="chickenSelect">
+        <option value="">Select Chicken</option>
+        <option value="3pcs">3pcs - ₱75</option>
+        <option value="5pcs">5pcs - ₱125</option>
+        <option value="7pcs">7pcs - ₱170</option>
+      </select>
+    </div>
 
-<select id="drink">
-<option value="0">No Drink</option>
-<option value="16">Lychee Drink (+16)</option>
-</select>
+    <div class="select-group">
+      <label>Flavor of Sauce</label>
+      <select id="sauceSelect">
+        <option value="N/A">N/A</option>
+        <option value="Sinigang Zing">Sinigang Zing</option>
+        <option value="Adobo Glaze">Adobo Glaze</option>
+        <option value="Kare-Kare Cream">Kare-Kare Cream</option>
+      </select>
+    </div>
 
-<div id="total">Total: 0</div>
+    <div class="select-group">
+      <label>Extra Dip</label>
+      <select id="extraDipSelect">
+        <option value="None">None</option>
+        <option value="Sinigang Zing">Sinigang Zing - ₱5</option>
+        <option value="Adobo Glaze">Adobo Glaze - ₱2</option>
+        <option value="Kare-Kare Cream">Kare-Kare Cream - ₱2</option>
+      </select>
+    </div>
 
-<button onclick="calculate()">Calculate</button>
-<button onclick="submitOrder()">Submit Order</button>
+    <div class="select-group">
+      <label>Drinks</label>
+      <select id="drinkSelect">
+        <option value="None">None</option>
+        <option value="Iced Tea">Iced Tea - ₱20</option>
+      </select>
+    </div>
 
+    <button onclick="createOrder()">Create Order</button>
+
+    <h2>Orders</h2>
+    <div id="orders"></div>
+
+    <div class="grand-total" id="grandTotal">
+      Grand Total: ₱0
+    </div>
+
+  </div>
 </div>
-  
+
 <script>
-window.addEventListener("load", function () {
+let orders=[];
+let orderId=1;
 
-const supabaseUrl = "https://grtttmvcwswbfqbmfwlt.supabase.co";
-const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdydHR0bXZjd3N3YmZxYm1md2x0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIyNjYyMjUsImV4cCI6MjA4Nzg0MjIyNX0.Rq0iWluWgd7IsTjU6Sg7F-SpDvXPysd9BkVPvAhn7fI";
+function createOrder(){
+  const name=document.getElementById("customerName").value.trim();
+  const chicken=document.getElementById("chickenSelect").value;
+  const sauce=document.getElementById("sauceSelect").value;
+  const extra=document.getElementById("extraDipSelect").value;
+  const drink=document.getElementById("drinkSelect").value;
 
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+  if(!name || !chicken){
+    alert("Enter name and select chicken!");
+    return;
+  }
 
-console.log("Supabase initialized");
+  let total=0;
 
-window.saveToDatabase = async function(name, total, chickenText, sauceText, drinkText) {
+  if(chicken==="3pcs") total+=75;
+  if(chicken==="5pcs") total+=125;
+  if(chicken==="7pcs") total+=170;
 
-if(!supabase) return;
+  if(extra==="Sinigang Zing") total+=5;
+  if(extra==="Adobo Glaze") total+=2;
+  if(extra==="Kare-Kare Cream") total+=2;
 
-const { error } = await supabase
-.from("orders")
-.insert([{
-customer_name: name,
-chicken_size: chickenText,
-sauce: sauceText,
-drink: drinkText,
-total_price: total,
-status: "active"
-}]);
+  if(drink==="Iced Tea") total+=20;
 
-if(error){
-alert("Database error");
-console.log(error);
-} else {
-alert("Order saved to database");
+  const order={
+    id:orderId++,
+    name,
+    chicken,
+    sauce,
+    extra,
+    drink,
+    total,
+    status:"Pending"
+  };
+
+  orders.push(order);
+  renderOrders();
 }
 
+function renderOrders(){
+  const container=document.getElementById("orders");
+  container.innerHTML="";
+  let grandTotal=0;
+
+  orders.forEach(order=>{
+    if(order.status==="Pending") grandTotal+=order.total;
+
+    const div=document.createElement("div");
+    div.className="order";
+    if(order.status==="Done") div.classList.add("done-order");
+
+    div.innerHTML=`
+      <div class="summary" onclick="toggleDetails(${order.id})">
+        Order #${order.id} - ${order.name} - ₱${order.total}
+      </div>
+      <div class="details" id="details-${order.id}">
+        Chicken: ${order.chicken}<br>
+        Sauce: ${order.sauce}<br>
+        Extra Dip: ${order.extra}<br>
+        Drink: ${order.drink}<br>
+        Status: ${order.status}<br><br>
+        ${order.status==="Pending" ? `<button onclick="markDone(${order.id})">Mark Done</button>` : ""}
+        <button onclick="deleteOrder(${order.id})">Delete</button>
+      </div>
+    `;
+
+    container.appendChild(div);
+  });
+
+  document.getElementById("grandTotal").textContent="Grand Total: ₱"+grandTotal;
 }
 
-});
-
-function submitOrder() {
-
-let name = document.getElementById("customer").value;
-
-if(name === ""){
-alert("Enter name");
-return;
+function toggleDetails(id){
+  const d=document.getElementById("details-"+id);
+  d.style.display=(d.style.display==="block"?"none":"block");
 }
 
-let total =
-parseInt(chicken.value) +
-parseInt(sauce.value) +
-parseInt(drink.value);
-
-let chickenText = chicken.options[chicken.selectedIndex].text;
-let sauceText = sauce.options[sauce.selectedIndex].text;
-let drinkText = drink.options[drink.selectedIndex].text;
-
-window.saveToDatabase(name, total, chickenText, sauceText, drinkText);
-
+function deleteOrder(id){
+  orders=orders.filter(o=>o.id!==id);
+  renderOrders();
 }
-  
+
+function markDone(id){
+  const o=orders.find(o=>o.id===id);
+  if(o){ o.status="Done"; renderOrders();}
+}
 </script>
-
 
 </body>
 </html>
