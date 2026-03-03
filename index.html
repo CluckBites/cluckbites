@@ -22,37 +22,26 @@ body {
   background:#E57373;
   border-radius:15px;
   box-shadow:0 4px 12px rgba(0,0,0,0.15);
-  max-width:450px;
+  max-width:500px;
   width:100%;
   overflow:hidden;
 }
 
 .header {
-  background:#D32F2F;
+  background:#C62828;
   padding:20px;
   text-align:center;
-}
-
-h1 {
-  margin:0;
 }
 
 .content {
   padding:20px;
 }
 
-.select-group {
-  margin:12px 0;
-  text-align:left;
+h1, h2 {
+  margin:10px 0;
 }
 
-.select-group label {
-  font-weight:bold;
-  display:block;
-  margin-bottom:5px;
-}
-
-select, input[type="text"] {
+input, select {
   width:100%;
   padding:8px;
   margin-bottom:10px;
@@ -74,7 +63,7 @@ button:hover {
 }
 
 .order {
-  margin-top:15px;
+  margin-top:10px;
   background:#EF5350;
   padding:10px;
   border-radius:10px;
@@ -82,6 +71,7 @@ button:hover {
 
 .done-order {
   opacity:0.6;
+  background:#81C784;
 }
 
 .summary {
@@ -95,8 +85,14 @@ button:hover {
   margin-top:5px;
 }
 
-.grand-total {
+.section-title {
   margin-top:20px;
+  font-weight:bold;
+  font-size:18px;
+}
+
+.grand-total {
+  margin-top:15px;
   font-weight:bold;
 }
 </style>
@@ -112,49 +108,45 @@ button:hover {
   <div class="content">
 
     <input type="text" id="customerName" placeholder="Customer Name">
+    <input type="text" id="gradeLevel" placeholder="Grade Level">
+    <input type="text" id="section" placeholder="Section">
+    <input type="text" id="roomNumber" placeholder="Room Number">
 
-    <div class="select-group">
-      <label>Chicken</label>
-      <select id="chickenSelect">
-        <option value="">Select Chicken</option>
-        <option value="3pcs">3pcs - ₱75</option>
-        <option value="5pcs">5pcs - ₱125</option>
-        <option value="7pcs">7pcs - ₱170</option>
-      </select>
-    </div>
+    <h2>Menu</h2>
 
-    <div class="select-group">
-      <label>Flavor of Sauce</label>
-      <select id="sauceSelect">
-        <option value="N/A">N/A</option>
-        <option value="Sinigang Zing">Sinigang Zing</option>
-        <option value="Adobo Glaze">Adobo Glaze</option>
-        <option value="Kare-Kare Cream">Kare-Kare Cream</option>
-      </select>
-    </div>
+    <select id="chickenSelect">
+      <option value="">Select Chicken</option>
+      <option value="3pcs">3pcs - ₱75</option>
+      <option value="5pcs">5pcs - ₱125</option>
+      <option value="7pcs">7pcs - ₱170</option>
+    </select>
 
-    <div class="select-group">
-      <label>Extra Dip</label>
-      <select id="extraDipSelect">
-        <option value="None">None</option>
-        <option value="Sinigang Zing">Sinigang Zing - ₱5</option>
-        <option value="Adobo Glaze">Adobo Glaze - ₱2</option>
-        <option value="Kare-Kare Cream">Kare-Kare Cream - ₱2</option>
-      </select>
-    </div>
+    <select id="sauceSelect">
+      <option value="N/A">Sauce: N/A</option>
+      <option value="Sinigang Zing">Sinigang Zing</option>
+      <option value="Adobo Glaze">Adobo Glaze</option>
+      <option value="Kare-Kare Cream">Kare-Kare Cream</option>
+    </select>
 
-    <div class="select-group">
-      <label>Drinks</label>
-      <select id="drinkSelect">
-        <option value="None">None</option>
-        <option value="Iced Tea">Iced Tea - ₱20</option>
-      </select>
-    </div>
+    <select id="extraDipSelect">
+      <option value="None">Extra Dip: None</option>
+      <option value="Sinigang Zing">Sinigang Zing - ₱5</option>
+      <option value="Adobo Glaze">Adobo Glaze - ₱2</option>
+      <option value="Kare-Kare Cream">Kare-Kare Cream - ₱2</option>
+    </select>
+
+    <select id="drinkSelect">
+      <option value="None">Drink: None</option>
+      <option value="Iced Tea">Iced Tea - ₱20</option>
+    </select>
 
     <button onclick="createOrder()">Create Order</button>
 
-    <h2>Orders</h2>
-    <div id="orders"></div>
+    <div class="section-title">🟡 Ongoing Orders</div>
+    <div id="ongoingOrders"></div>
+
+    <div class="section-title">🟢 Done Orders</div>
+    <div id="doneOrders"></div>
 
     <div class="grand-total" id="grandTotal">
       Grand Total: ₱0
@@ -167,84 +159,79 @@ button:hover {
 let orders = [];
 let orderId = 1;
 
-/* ===============================
-   LOAD SAVED DATA ON PAGE START
-================================= */
+/* LOAD SAVED DATA */
 const savedOrders = localStorage.getItem("cluckBitesOrders");
 const savedId = localStorage.getItem("cluckBitesOrderId");
 
-if (savedOrders) {
-  orders = JSON.parse(savedOrders);
-}
+if (savedOrders) orders = JSON.parse(savedOrders);
+if (savedId) orderId = parseInt(savedId);
 
-if (savedId) {
-  orderId = parseInt(savedId);
-}
-
-/* ===============================
-   SAVE FUNCTION
-================================= */
-function saveOrders() {
+function saveOrders(){
   localStorage.setItem("cluckBitesOrders", JSON.stringify(orders));
   localStorage.setItem("cluckBitesOrderId", orderId);
 }
 
-/* ===============================
-   CREATE ORDER
-================================= */
 function createOrder(){
   const name = document.getElementById("customerName").value.trim();
+  const grade = document.getElementById("gradeLevel").value.trim();
+  const section = document.getElementById("section").value.trim();
+  const room = document.getElementById("roomNumber").value.trim();
   const chicken = document.getElementById("chickenSelect").value;
   const sauce = document.getElementById("sauceSelect").value;
   const extra = document.getElementById("extraDipSelect").value;
   const drink = document.getElementById("drinkSelect").value;
 
-  if(!name || !chicken){
-    alert("Enter name and select chicken!");
+  if(!name){
+    alert("Enter customer name!");
     return;
   }
 
   let total = 0;
+  let hasItem = false;
 
-  if(chicken==="3pcs") total+=75;
-  if(chicken==="5pcs") total+=125;
-  if(chicken==="7pcs") total+=170;
+  if(chicken==="3pcs"){ total+=75; hasItem=true; }
+  if(chicken==="5pcs"){ total+=125; hasItem=true; }
+  if(chicken==="7pcs"){ total+=170; hasItem=true; }
 
-  if(extra==="Sinigang Zing") total+=5;
-  if(extra==="Adobo Glaze") total+=2;
-  if(extra==="Kare-Kare Cream") total+=2;
+  if(extra==="Sinigang Zing"){ total+=5; hasItem=true; }
+  if(extra==="Adobo Glaze"){ total+=2; hasItem=true; }
+  if(extra==="Kare-Kare Cream"){ total+=2; hasItem=true; }
 
-  if(drink==="Iced Tea") total+=20;
+  if(drink==="Iced Tea"){ total+=20; hasItem=true; }
+
+  if(!hasItem){
+    alert("Select at least one item!");
+    return;
+  }
 
   const order = {
     id: orderId++,
     name,
-    chicken,
+    grade,
+    section,
+    room,
+    chicken: chicken || "None",
     sauce,
     extra,
     drink,
     total,
-    status:"Pending"
+    status:"Ongoing"
   };
 
   orders.push(order);
   saveOrders();
   renderOrders();
-
-  document.getElementById("customerName").value="";
-  document.getElementById("chickenSelect").selectedIndex=0;
 }
 
-/* ===============================
-   RENDER ORDERS
-================================= */
 function renderOrders(){
-  const container=document.getElementById("orders");
-  container.innerHTML="";
-  let grandTotal=0;
+  const ongoingDiv = document.getElementById("ongoingOrders");
+  const doneDiv = document.getElementById("doneOrders");
+  ongoingDiv.innerHTML="";
+  doneDiv.innerHTML="";
+  let grandTotal = 0;
 
   orders.forEach(order=>{
-    if(order.status==="Pending") grandTotal+=order.total;
+    if(order.status==="Ongoing") grandTotal+=order.total;
 
     const div=document.createElement("div");
     div.className="order";
@@ -255,24 +242,26 @@ function renderOrders(){
         Order #${order.id} - ${order.name} - ₱${order.total}
       </div>
       <div class="details" id="details-${order.id}">
+        Grade: ${order.grade}<br>
+        Section: ${order.section}<br>
+        Room: ${order.room}<br>
         Chicken: ${order.chicken}<br>
         Sauce: ${order.sauce}<br>
         Extra Dip: ${order.extra}<br>
         Drink: ${order.drink}<br>
         Status: ${order.status}<br><br>
-        ${order.status==="Pending" ? `<button onclick="markDone(${order.id})">Mark Done</button>` : ""}
+        ${order.status==="Ongoing" ? `<button onclick="markDone(${order.id})">Mark Done</button>` : ""}
         <button onclick="deleteOrder(${order.id})">Delete</button>
       </div>
     `;
-    container.appendChild(div);
+
+    if(order.status==="Ongoing") ongoingDiv.appendChild(div);
+    else doneDiv.appendChild(div);
   });
 
   document.getElementById("grandTotal").textContent="Grand Total: ₱"+grandTotal;
 }
 
-/* ===============================
-   OTHER FUNCTIONS
-================================= */
 function toggleDetails(id){
   const d=document.getElementById("details-"+id);
   d.style.display=(d.style.display==="block"?"none":"block");
@@ -293,7 +282,6 @@ function markDone(id){
   }
 }
 
-/* INITIAL RENDER */
 renderOrders();
 </script>
 
